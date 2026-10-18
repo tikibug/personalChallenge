@@ -1,11 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\GeneSearchController;
+use App\Http\Controllers\GeneListController;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/genes', [GeneSearchController::class, 'index']);
+Route::get('/genes', [GeneListController::class, 'index']);
 
