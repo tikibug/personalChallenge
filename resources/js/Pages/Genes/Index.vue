@@ -9,7 +9,7 @@ import {
     IconField,
     InputText,
     InputIcon
-} from "primevue";
+} from 'primevue';
 import { router, Link } from '@inertiajs/vue3'
 import { ref, watch } from 'vue';
 

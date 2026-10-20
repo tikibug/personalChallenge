@@ -1,6 +1,6 @@
 <script setup>
 
-import Home from "@primeicons/vue/home";
+import Home from '@primeicons/vue/home';
 import {Breadcrumb} from "primevue";
 import {Link} from "@inertiajs/vue3";
 
