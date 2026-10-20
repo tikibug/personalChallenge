@@ -44,4 +44,18 @@ class Gene extends Model
             'external_ids' => 'array',
         ];
     }
+
+    public function getRouteKeyName(): string
+    {
+        return 'hgnc_id';
+    }
+
+    public function scopeKeywordSearch($query, string $term) {
+        return $query->where(fn($query) =>
+            $query->whereLike('symbol', "%{$term}%")
+                ->orWhereLike('name', "%{$term}%")
+                ->orWhereLike('hgnc_id', "%{$term}%")
+        );
+
+    }
 }
