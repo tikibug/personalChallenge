@@ -4,6 +4,7 @@ import AutoComplete from 'primevue/autocomplete';
 import { router } from '@inertiajs/vue3'
 
 const suggestions = ref([])
+const locusType = ref('')
 const page = ref(1);
 const search = ref(null);
 const sort = ref('symbol');
@@ -12,6 +13,7 @@ const direction = ref('asc');
 const queryParams = () => ({
     page: page.value,
     search: search.value,
+    locusType: locusType.value,
     sort: sort.value,
     direction: direction.value,
 });
@@ -58,7 +60,7 @@ const doSearch = (event) => {
             </p>
 
             <!-- Integrated Search Bar -->
-            <div class="w-full max-w-2xl mt-4 bg-surface-800/80 backdrop-blur border border-surface-700 p-2 rounded-2xl shadow-2xl flex flex-col sm:flex-row items-center gap-2">
+            <div class="w-full max-w-2xl mt-4 bg-surface-800/80 backdrop-blur border border-surface-700 p-2 rounded-2xl shadow-2xl flex-col sm:flex-row items-center gap-2">
 
                 <AutoComplete
                     v-model="search"
@@ -68,6 +70,7 @@ const doSearch = (event) => {
                     @option-select="selectGene"
                     @keyup.enter="doSearch"
                     fluid
+                    placeholder="Search by symbol, HNGC Id, or keyword..."
                 />
             </div>
         </div>
