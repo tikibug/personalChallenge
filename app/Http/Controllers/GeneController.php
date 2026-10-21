@@ -18,7 +18,11 @@ class GeneController extends Controller
             ->trim()
             ->lower();
 
-        $locusType = $request->string('locusType')->toString();
+        $locusType = $request->string('locusType')
+            ->trim()
+            ->toString();
+
+        $locusType = $locusType ?: 'All';
 
         $allowedSorts = [
             'hgnc_id',
