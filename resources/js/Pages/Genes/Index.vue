@@ -23,7 +23,7 @@ const props = defineProps({
 
 const page = ref(props.genes?.current_page ?? 1);
 const search = ref(props.filters?.search ?? '');
-const locusType = ref(props.filters?.locus_type ?? '');
+const locusType = ref(props.filters?.locusType ?? 'All');
 const sort = ref(props.filters?.sort ?? 'symbol');
 const direction = ref(props.filters?.direction ?? 'asc');
 
@@ -86,12 +86,16 @@ const onSort = (event) => {
 }
 
 const goToGene = (event) => {
-    router.get(`/genes/${encodeURIComponent(event.data.hgnc_id)}`, queryParams());
+    router.get(`/genes/${encodeURIComponent(event.data.hgnc_id)}`, queryParams(), {
+        preserveState: true,
+    });
 }
 
 const doSearch = () => {
     if (search.value.length === 0 || search.value.length > 1) {
-        router.get('/genes', queryParams())
+        router.get('/genes', queryParams(), {
+            preserveState: true,
+        })
     }
 }
 </script>
