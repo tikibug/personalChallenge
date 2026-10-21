@@ -18,6 +18,8 @@ class GeneController extends Controller
             ->trim()
             ->lower();
 
+        $locusType = $request->string('locusType')->toString();
+
         $allowedSorts = [
             'hgnc_id',
             'symbol',
@@ -35,16 +37,30 @@ class GeneController extends Controller
             ? 'desc'
             : 'asc';
 
-        $genes = Gene::query()
-            ->when($search,
-                fn ($query) =>
-                    $query->keywordSearch($search)
+        $baseQuery = Gene::query()
+            ->when(
+                $search,
+                fn ($query) => $query->keywordSearch($search)
+            );
+
+        $locusTypes = (clone $baseQuery)
+            ->whereNotNull('locus_type')
+            ->select('locus_type')
+            ->distinct()
+            ->orderBy('locus_type')
+            ->pluck('locus_type')
+            ->prepend('All');
+
+        $genes = $baseQuery
+            ->when(
+                $locusType && $locusType !== 'All',
+                fn ($query) => $query->where('locus_type', $locusType)
             )
             ->when($sort === 'hgnc_id',
                 fn ($query) =>
-                    $query->orderByRaw("CAST(REGEXP_REPLACE(\"{$sort}\", '\D', '', 'g') AS INTEGER) {$direction}"),
+                $query->orderByRaw("CAST(REGEXP_REPLACE(\"{$sort}\", '\D', '', 'g') AS INTEGER) {$direction}"),
                 fn ($query) =>
-                    $query->orderBy($sort, $direction)
+                $query->orderBy($sort, $direction)
             )
             ->paginate(25)
             ->withQueryString();
@@ -54,8 +70,10 @@ class GeneController extends Controller
         return Inertia::render('Genes/Index', [
             'pageTitle' => $pageTitle,
             'genes' => $genes,
+            'locusTypes' => $locusTypes,
             'filters' => [
                 'search' => $search,
+                'locusType' => $locusType,
                 'sort' => $sort,
                 'direction' => $direction,
             ],
