@@ -8,7 +8,8 @@ import {
     Column,
     IconField,
     InputText,
-    InputIcon
+    InputIcon,
+    Select
 } from 'primevue';
 import { router, Link } from '@inertiajs/vue3'
 import { ref, watch } from 'vue';
@@ -16,11 +17,13 @@ import { ref, watch } from 'vue';
 const props = defineProps({
     pageTitle: String,
     genes: Object,
+    locusTypes: Array,
     filters: Object,
 })
 
 const page = ref(props.genes?.current_page ?? 1);
 const search = ref(props.filters?.search ?? '');
+const locusType = ref(props.filters?.locus_type ?? '');
 const sort = ref(props.filters?.sort ?? 'symbol');
 const direction = ref(props.filters?.direction ?? 'asc');
 
@@ -28,6 +31,7 @@ const direction = ref(props.filters?.direction ?? 'asc');
 const queryParams = () => ({
     page: page.value,
     search: search.value,
+    locusType: locusType.value,
     sort: sort.value,
     direction: direction.value,
 });
@@ -50,6 +54,15 @@ watch(search, (value) => {
         doSearch();
     }, 300)
 })
+
+watch(locusType, () => {
+    page.value = 1;
+
+    router.get('/genes', queryParams(), {
+        preserveState: true,
+        replace: true,
+    });
+});
 
 const onPage = (event) => {
     page.value = event.page + 1;
@@ -98,8 +111,8 @@ const doSearch = () => {
         </template>
     </Breadcrumb>
   <div class="p-6">
-    <h1 class="text-xl font-bold">{{ pageTitle }}</h1>
-      <div>
+    <h1 class="text-xl font-bold">{{ pageTitle }} ({{genes.total}})</h1>
+      <div class="flex gap-2">
           <IconField class="w-100">
               <InputText
                   v-model="search"
@@ -114,7 +127,14 @@ const doSearch = () => {
                   <Times />
               </InputIcon>
         </IconField>
+          <Select
+              v-model="locusType"
+              :options="locusTypes"
+              placeholder="Filter by Locus Type"
+              class="w-full md:w-64"
+          />
       </div>
+
 
       <div class="w-full">
           <DataTable :value="genes.data"
@@ -136,6 +156,12 @@ const doSearch = () => {
               <Column field="status" header="Status" sortable/>
               <Column field="locus_group" header="Locus Group" sortable/>
               <Column field="locus_type" header="Locus Type" sortable/>
+              <template #empty>
+                  <div class="flex flex-column align-items-center justify-content-center padding-4">
+                      <i class="pi pi-box text-4xl text-secondary mb-2"></i>
+                      <p>No genes available that match your search criteria.</p>
+                  </div>
+              </template>
           </DataTable>
       </div>
   </div>
