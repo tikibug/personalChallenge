@@ -20,9 +20,7 @@ class GeneResource extends JsonResource
 
             'aliases' => $this->alias_symbol,
 
-            'previous_symbols' => $this->prev_symbol
-                ? explode('|', $this->prev_symbol)
-                : [],
+            'previous_symbols' => $this->prev_symbol,
         ];
     }
 }
