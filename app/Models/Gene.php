@@ -21,7 +21,7 @@ class Gene extends Model
         'date_modified',
         'ensembl_gene_id',
         'entrez_id',
-        'aliase_symbols',
+        'alias_symbol',
         'alias_names',
         'previous_symbols',
         'previous_names',
@@ -36,7 +36,7 @@ class Gene extends Model
             'date_name_changed' => 'date',
             'date_modified' => 'date',
 
-            'alias_symbols' => 'array',
+            'alias_symbol' => 'array',
             'alias_names' => 'array',
             'previous_symbols' => 'array',
             'previous_names' => 'array',
