@@ -70,7 +70,7 @@ const doSearch = (event) => {
                     @option-select="selectGene"
                     @keyup.enter="doSearch"
                     fluid
-                    placeholder="Search by symbol, HNGC Id, or keyword..."
+                    placeholder="Search by symbol, HGNC Id, or keyword..."
                 />
             </div>
         </div>
